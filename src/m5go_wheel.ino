@@ -31,7 +31,7 @@
 
 // ==================== I2C Slave =====================
 uint8_t i2c_read_addr = 0;
-#define SLAVE_ADDR             0x90
+#define SLAVE_ADDR             0x56
 #define I2C_ADDR_OFFSET        0
 #define MOTOR0_CTRL_ADDR       (I2C_ADDR_OFFSET + 0)
 #define MOTOR0_CTRL_H_ADDR     (MOTOR0_CTRL_ADDR)
@@ -94,17 +94,7 @@ void receiveEvent(int howMany) {
 // =================== I2c read event ====================
 void requestEvent()
 {
-	if (i2c_read_addr == ENCODER0_ADDR) {
-		int16_t relative_0 = encoder0_cnt - encoder0_rel;
-		int16_t relative_1 = encoder1_cnt - encoder1_rel;
-		Wire.write(((uint8_t*)(&relative_0))[0]);
-		Wire.write(((uint8_t*)(&relative_0))[1]);
-		Wire.write(((uint8_t*)(&relative_1))[0]);
-		Wire.write(((uint8_t*)(&relative_1))[1]);
-		encoder0_rel = encoder0_cnt;
-		encoder1_rel = encoder1_cnt;
-	}
-	else if (i2c_read_addr == ENCODER0_ABS_ADDR) {
+	if (i2c_read_addr == ENCODER0_ABS_ADDR) {
 		Wire.write(((uint8_t*)(&encoder0_cnt))[0]);
 		Wire.write(((uint8_t*)(&encoder0_cnt))[1]);
 		Wire.write(((uint8_t*)(&encoder0_cnt))[2]);
@@ -113,6 +103,16 @@ void requestEvent()
 		Wire.write(((uint8_t*)(&encoder1_cnt))[1]);
 		Wire.write(((uint8_t*)(&encoder1_cnt))[2]);
 		Wire.write(((uint8_t*)(&encoder1_cnt))[3]);
+	
+	} else {
+		int16_t relative_0 = encoder0_cnt - encoder0_rel;
+		int16_t relative_1 = encoder1_cnt - encoder1_rel;
+		Wire.write(((uint8_t*)(&relative_0))[0]);
+		Wire.write(((uint8_t*)(&relative_0))[1]);
+		Wire.write(((uint8_t*)(&relative_1))[0]);
+		Wire.write(((uint8_t*)(&relative_1))[1]);
+		encoder0_rel = encoder0_cnt;
+		encoder1_rel = encoder1_cnt;
 	}
 }
 
