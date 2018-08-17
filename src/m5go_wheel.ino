@@ -85,7 +85,7 @@ void receiveEvent(int howMany) {
 				for (uint8_t i = 0; i < 4; i++) {
 					rxbuf[i] = Wire.read();
 				}
-				motor.move(data[0], data[1]);
+				motor.move(-data[0], -data[1]);
 			}	
 		}
 	}
